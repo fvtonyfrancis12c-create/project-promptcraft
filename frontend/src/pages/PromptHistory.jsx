@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Clock, Search, ChevronRight, XCircle } from 'lucide-react';
+import { Trash2, Clock, Search, ChevronRight, XCircle, RefreshCw } from 'lucide-react';
 import api from '../utils/api';
 
-const PromptHistoryPage = () => {
+const PromptHistory = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
