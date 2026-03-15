@@ -1,4 +1,4 @@
-// Force v1 API endpoint to resolve the v1beta 404 error
+// @google/genai SDK with v1 API forced — fixed systemInstruction field
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -10,7 +10,6 @@ const getClient = () => {
     if (!process.env.GEMINI_API_KEY) {
         throw new Error("GEMINI_API_KEY is missing.");
     }
-    // Explicitly force the v1 API to avoid v1beta 404 errors
     aiClient = new GoogleGenAI({ 
         apiKey: process.env.GEMINI_API_KEY,
         httpOptions: { apiVersion: 'v1' }
@@ -18,14 +17,31 @@ const getClient = () => {
     return aiClient;
 };
 
+// Build contents array with optional system instruction prepended as a user message
+const buildContents = (prompt, systemInstruction) => {
+    if (!systemInstruction) {
+        return prompt;
+    }
+    // For v1 API: pass system instruction as a separate system_instruction field
+    return prompt;
+};
+
 export const generateContent = async (prompt, systemInstruction = null) => {
     const ai = getClient();
     try {
-        console.log('--- GEMINI CALL (forced v1) ---');
+        console.log('--- GEMINI CALL (v1 forced) ---');
+        const requestConfig = {};
+        if (systemInstruction) {
+            requestConfig.systemInstruction = {
+                role: 'system',
+                parts: [{ text: systemInstruction }]
+            };
+        }
+
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
-            contents: prompt,
-            config: systemInstruction ? { systemInstruction } : undefined,
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            config: Object.keys(requestConfig).length > 0 ? requestConfig : undefined,
         });
         console.log('--- GEMINI SUCCESS ---');
         return response.text;
@@ -38,13 +54,18 @@ export const generateContent = async (prompt, systemInstruction = null) => {
 export const generateJSONContent = async (prompt, systemInstruction = null) => {
     const ai = getClient();
     try {
+        const requestConfig = { responseMimeType: 'application/json' };
+        if (systemInstruction) {
+            requestConfig.systemInstruction = {
+                role: 'system',
+                parts: [{ text: systemInstruction }]
+            };
+        }
+
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
-            contents: prompt,
-            config: {
-                responseMimeType: 'application/json',
-                ...(systemInstruction ? { systemInstruction } : {}),
-            },
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            config: requestConfig,
         });
         return JSON.parse(response.text);
     } catch (error) {

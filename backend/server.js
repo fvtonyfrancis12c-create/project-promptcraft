@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({ 
         status: 'OK', 
         hasKey: !!process.env.GEMINI_API_KEY, 
-        version: '13.1.V1_FORCED',
+        version: '13.2.CONTENT_FIX',
         dbStatus: 'DISABLED_FOR_DEBUG',
         lastError: lastError ? { message: lastError.message } : 'None'
     });
