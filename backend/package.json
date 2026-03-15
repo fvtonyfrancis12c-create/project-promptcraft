@@ -1,0 +1,22 @@
+{
+  "name": "promptcraft-backend",
+  "version": "1.0.0",
+  "description": "Backend for PromptCraft by Tony Francis",
+  "author": "Tony Francis <tony28252@gmail.com>",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.45.0",
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^8.3.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.3.0"
+  }
+}
