@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || '/api',
-    timeout: 10000, // 10 seconds timeout
+    timeout: 60000, // 60 seconds timeout - necessary for Render free-tier cold starts
 }); 
 
 export const generatePrompt = async (prompt) => {
