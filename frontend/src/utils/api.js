@@ -5,8 +5,10 @@ const api = axios.create({
     timeout: 60000, // 60 seconds timeout - necessary for Render free-tier cold starts
 }); 
 
-export const generatePrompt = async (prompt) => {
-    const res = await api.post('/generate', { prompt });
+export const generatePrompt = async (topic) => {
+    console.log('--- CALLING GENERATE ---', topic);
+    const res = await api.post('/generate', { prompt: topic });
+    console.log('--- GENERATE RESPONSE ---', res.data);
     return res.data.result;
 };
 
