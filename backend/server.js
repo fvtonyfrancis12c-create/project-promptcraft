@@ -11,42 +11,57 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-console.log('--- PROMPTCRAFT PRODUCTION ENGINE STARTING ---');
+let lastError = null;
 
-// Middleware
+console.log('--- PROMPTCRAFT ULTIMATE ENGINE STARTING ---');
+
 app.use(cors());
 app.use(express.json());
+
+// Diagnostic middleware
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    console.log(`[REQ] ${req.method} ${req.path}`);
     next();
 });
 
-// Health check
-app.get('/health', (req, res) => res.status(200).json({ status: 'OK', hasKey: !!process.env.GEMINI_API_KEY, version: '9.0.FORCE' }));
-app.get('/', (req, res) => res.json({ status: 'online', service: 'PromptCraft', version: '9.0.FORCE' }));
+// Health check with error reporting
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        hasKey: !!process.env.GEMINI_API_KEY, 
+        version: '11.0.ULTIMATE',
+        lastError: lastError ? { message: lastError.message, stack: lastError.stack } : 'None'
+    });
+});
+
+app.get('/', (req, res) => res.json({ status: 'online', version: '11.0.ULTIMATE' }));
 
 // Routes
 app.use('/api', promptRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/templates', templateRoutes);
 
-// Error Handling
+// Detailed Error Handling
 app.use((err, req, res, next) => {
-    console.error('SERVER ERROR:', err.message);
+    lastError = err;
+    console.error('ENGINE ERROR:', err.message);
     res.status(500).json({ 
         error: 'Engine Error', 
-        message: err.message,
-        details: 'Check if API key is blocked or if model name is correct'
+        message: err.message, 
+        version: '11.0.ULTIMATE'
     });
 });
 
-// Database connection (Non-blocking)
+// DB Connection
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 })
       .then(() => console.log('✅ DB Connected'))
-      .catch(err => console.error('❌ DB Error:', err.message));
+      .catch(err => {
+          lastError = err;
+          console.error('❌ DB Error:', err.message);
+      });
 }
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 PROMPTCRAFT STABLE LIVE ON PORT ${PORT}`);
+    console.log(`🚀 ULTIMATE ENGINE LIVE ON ${PORT}`);
 });
