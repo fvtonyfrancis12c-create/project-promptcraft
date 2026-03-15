@@ -18,9 +18,14 @@ import PromptPlayground from './pages/PromptPlayground';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark' || 
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const saved = localStorage.getItem('theme');
+        if (saved) return saved === 'dark';
+        return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+      }
+    } catch (e) {
+      console.warn('Theme preference detection failed', e);
     }
     return false;
   });

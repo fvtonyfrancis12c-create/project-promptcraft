@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, MessageSquare, Zap, Target, Image as ImageIcon, Library } from 'lucide-react';
+import { Sparkles, MessageSquare, Zap, Target, Image as ImageIcon, Layout as LibraryIcon } from 'lucide-react';
 
 const features = [
   { name: 'Prompt Generator', icon: <Zap className="h-6 w-6 text-yellow-500" />, path: '/generator', desc: 'Instantly create high-quality AI prompts from simple ideas.' },
@@ -8,8 +8,7 @@ const features = [
   { name: 'Prompt Analyzer', icon: <Target className="h-6 w-6 text-red-500" />, path: '/analyzer', desc: 'Get actionable feedback on prompt structure and clarity.' },
   { name: 'Auto-Optimizer', icon: <Zap className="h-6 w-6 text-purple-500" />, path: '/optimizer', desc: 'Generate 3 optimized versions with scores and metrics. (NEW)' },
   { name: 'Image Builder', icon: <ImageIcon className="h-6 w-6 text-blue-500" />, path: '/image', desc: 'Construct detailed Midjourney or DALL-E style visual prompts.' },
-  { name: 'AI Chatbox', icon: <MessageSquare className="h-6 w-6 text-green-500" />, path: '/chat', desc: 'Talk to our specialized AI Prompt Engineer directly.' },
-  { name: 'Contact', icon: <MessageSquare className="h-6 w-6 text-teal-500" />, path: '/contact', desc: 'Get in touch with the creator, Tony Francis.' },
+  { name: 'Library', icon: <LibraryIcon className="h-6 w-6 text-orange-500" />, path: '/library', desc: 'Browse and discover community prompt templates.' },
 ];
 
 const Home = () => {

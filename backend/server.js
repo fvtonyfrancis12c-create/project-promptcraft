@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
         contact: 'tony28252@gmail.com'
     });
 });
-app.use('/api', apiRoutes);
+app.use('/api', promptRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/templates', templateRoutes);
 

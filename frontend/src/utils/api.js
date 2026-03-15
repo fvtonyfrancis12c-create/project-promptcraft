@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-}); // Default to localhost for dev
+    baseURL: import.meta.env.VITE_API_URL || '/api',
+}); // Default to /api for production compatibility via vercel.json
 
 export const generatePrompt = async (prompt) => {
     const res = await api.post('/generate', { prompt });
