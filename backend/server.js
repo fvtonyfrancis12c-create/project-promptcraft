@@ -33,7 +33,11 @@ app.use('/api/templates', templateRoutes);
 // Error Handling
 app.use((err, req, res, next) => {
     console.error('SERVER ERROR:', err.message);
-    res.status(500).json({ error: 'Server Failure. Please check backend logs.' });
+    res.status(500).json({ 
+        error: 'Engine Error', 
+        message: err.message,
+        details: 'Check if API key is blocked or if model name is correct'
+    });
 });
 
 // Database connection (Non-blocking)
