@@ -17,8 +17,8 @@ const Generator = () => {
       const resp = await generatePrompt(topic);
       setResult(resp);
     } catch (error) {
-      console.error(error);
-      setResult("Error generating prompt. Make sure your GEMINI_API_KEY is set in backend/.env.");
+      const errorMsg = error.response?.data?.error || error.message || "Backend unreachable";
+      setResult(`System Error: ${errorMsg}. Please check backend logs.`);
     } finally {
       setLoading(false);
     }

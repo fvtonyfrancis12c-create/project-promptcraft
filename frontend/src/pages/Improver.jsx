@@ -17,7 +17,8 @@ const Improver = () => {
       const resp = await improvePrompt(topic);
       setResult(resp);
     } catch (error) {
-      setResult("Error improving prompt. Backend might be unreachable or missing API key.");
+      const errorMsg = error.response?.data?.error || error.message || "Backend unreachable";
+      setResult(`System Error: ${errorMsg}. Please ensure GEMINI_API_KEY is set in Render env.`);
     } finally {
       setLoading(false);
     }
