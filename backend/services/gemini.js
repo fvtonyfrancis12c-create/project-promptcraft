@@ -1,4 +1,4 @@
-// Uses @google/genai (v1 API) instead of @google/generative-ai (v1beta API)
+// Force v1 API endpoint to resolve the v1beta 404 error
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,25 +8,29 @@ let aiClient = null;
 const getClient = () => {
     if (aiClient) return aiClient;
     if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is missing. Check your environment variables.");
+        throw new Error("GEMINI_API_KEY is missing.");
     }
-    aiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    // Explicitly force the v1 API to avoid v1beta 404 errors
+    aiClient = new GoogleGenAI({ 
+        apiKey: process.env.GEMINI_API_KEY,
+        httpOptions: { apiVersion: 'v1' }
+    });
     return aiClient;
 };
 
 export const generateContent = async (prompt, systemInstruction = null) => {
     const ai = getClient();
     try {
-        console.log('--- INITIATING GEMINI CALL (v1 API) ---');
+        console.log('--- GEMINI CALL (forced v1) ---');
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: prompt,
             config: systemInstruction ? { systemInstruction } : undefined,
         });
-        console.log('--- GEMINI CALL SUCCESS ---');
+        console.log('--- GEMINI SUCCESS ---');
         return response.text;
     } catch (error) {
-        console.error("--- GEMINI CRITICAL ERROR ---", error.message);
+        console.error("--- GEMINI ERROR ---", error.message);
         throw new Error(`Gemini Failure: ${error.message}`);
     }
 };
