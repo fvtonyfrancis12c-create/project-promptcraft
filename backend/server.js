@@ -45,8 +45,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message || 'Something broke on the server!' });
 });
 
-// Database connection (Disabled for debugging)
-/*
+// Database connection (Non-blocking)
 console.log('Attempting MongoDB connection...');
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/promptcraft', {
   serverSelectionTimeoutMS: 5000
@@ -56,7 +55,6 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/promptcraft
     console.error('❌ MongoDB connection error:', err.message);
     console.log('⚠️ Running in offline mode (History will be disabled)');
   });
-*/
 
 app.listen(PORT, () => {
     console.log(`🚀 PROMPTCRAFT ENGINE v5.1 LIVE ON PORT ${PORT}`);
