@@ -19,7 +19,7 @@ export const generateContent = async (prompt, systemInstruction = null) => {
         console.log('--- INITIATING GEMINI CALL ---', { model: 'gemini-1.5-flash' });
         // Use full model path if necessary, but standard SDK uses short name
         const model = ai.getGenerativeModel({ 
-            model: 'models/gemini-1.5-flash',
+            model: 'gemini-1.5-flash-latest',
             systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
         });
 
@@ -37,7 +37,7 @@ export const generateJSONContent = async (prompt, systemInstruction = null) => {
     const ai = getGenAI();
     try {
         const model = ai.getGenerativeModel({ 
-            model: 'models/gemini-1.5-flash',
+            model: 'gemini-1.5-flash-latest',
             generationConfig: { responseMimeType: "application/json" },
             systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
         });
