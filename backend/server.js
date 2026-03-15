@@ -1,25 +1,19 @@
 import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000; // Render preferred port
 
-console.log('--- BOOTING CORE ENGINE ---');
-console.log('Port:', PORT);
-console.log('Env:', process.env.NODE_ENV);
+app.use(cors());
+app.use(express.json());
 
-app.get('/health', (req, res) => {
-  console.log('Health check received');
-  res.status(200).json({ status: 'OK', mode: 'CORE_ONLY' });
-});
-
-app.get('/api/health', (req, res) => {
-  console.log('API Health check received');
-  res.status(200).json({ status: 'API OK', mode: 'CORE_ONLY' });
-});
-
-app.get('*', (req, res) => {
-  res.send('PromptCraft Core Engine is Live. All features currently in maintenance mode.');
-});
+// Ultra-minimal health check
+app.get('/health', (req, res) => res.json({ status: 'OK', engine: 'PromptCraft 1.0', time: new Date() }));
+app.get('/api/health', (req, res) => res.json({ status: 'API OK' }));
+app.all('*', (req, res) => res.json({ status: 'online', path: req.path }));
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 CORE ENGINE LIVE ON PORT ${PORT}`);
+    console.log(`--- ENGINE LIVE ON PORT ${PORT} ---`);
 });
