@@ -71,5 +71,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 PROMPTCRAFT ENGINE v2.0 LIVE ON PORT ${PORT}`);
+    console.log('--- Production Mode Active ---');
 });
