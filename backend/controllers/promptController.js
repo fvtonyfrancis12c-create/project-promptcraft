@@ -1,5 +1,6 @@
 import { generateContent, generateJSONContent } from '../services/gemini.js';
 import PromptHistory from '../models/PromptHistory.js';
+import mongoose from 'mongoose';
 
 const saveToHistory = async (promptText, aiResponse, toolUsed) => {
     try {

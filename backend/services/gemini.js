@@ -2,15 +2,22 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Initialize the Gemini client.
-const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+let genAICache = null;
+
+const getGenAI = () => {
+    if (genAICache) return genAICache;
+    if (!process.env.GEMINI_API_KEY) {
+        throw new Error("GEMINI_API_KEY is missing. Check your environment variables.");
+    }
+    genAICache = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    return genAICache;
+};
 
 export const generateContent = async (prompt, systemInstruction = null) => {
-    if (!genAI) throw new Error("GEMINI_API_KEY is missing. Please add it to your backend/.env file.");
-    
+    const ai = getGenAI();
     try {
-        const model = genAI.getGenerativeModel({ 
-            model: 'gemini-2.5-flash',
+        const model = ai.getGenerativeModel({ 
+            model: 'gemini-1.5-flash',
             systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
         });
 
@@ -24,11 +31,10 @@ export const generateContent = async (prompt, systemInstruction = null) => {
 };
 
 export const generateJSONContent = async (prompt, systemInstruction = null) => {
-    if (!genAI) throw new Error("GEMINI_API_KEY is missing. Please add it to your backend/.env file.");
-    
+    const ai = getGenAI();
     try {
-        const model = genAI.getGenerativeModel({ 
-            model: 'gemini-2.5-flash',
+        const model = ai.getGenerativeModel({ 
+            model: 'gemini-1.5-flash',
             generationConfig: { responseMimeType: "application/json" },
             systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
         });

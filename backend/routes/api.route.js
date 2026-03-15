@@ -3,6 +3,7 @@ import { handleGenerate, handleImprove, handleAnalyze, handleImage, handleChat, 
 
 const router = express.Router();
 
+router.get('/health', (req, res) => res.status(200).send('API OK'));
 router.post('/generate', handleGenerate);
 router.post('/improve', handleImprove);
 router.post('/analyze', handleAnalyze);
