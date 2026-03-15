@@ -1,6 +1,6 @@
 {
   "name": "promptcraft-backend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Backend for PromptCraft by Tony Francis",
   "author": "Tony Francis <tony28252@gmail.com>",
   "main": "server.js",

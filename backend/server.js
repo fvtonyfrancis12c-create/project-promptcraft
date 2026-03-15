@@ -22,8 +22,8 @@ app.use((req, res, next) => {
 });
 
 // Health check
-app.get('/health', (req, res) => res.status(200).json({ status: 'OK', hasKey: !!process.env.GEMINI_API_KEY, version: '7.5.FINAL' }));
-app.get('/', (req, res) => res.json({ status: 'online', service: 'PromptCraft', version: '7.5.FINAL' }));
+app.get('/health', (req, res) => res.status(200).json({ status: 'OK', hasKey: !!process.env.GEMINI_API_KEY, version: '9.0.FORCE' }));
+app.get('/', (req, res) => res.json({ status: 'online', service: 'PromptCraft', version: '9.0.FORCE' }));
 
 // Routes
 app.use('/api', promptRoutes);
