@@ -24,35 +24,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Health check with error reporting
-app.get('/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'OK', 
-        hasKey: !!process.env.GEMINI_API_KEY, 
-        version: '11.0.ULTIMATE',
-        lastError: lastError ? { message: lastError.message, stack: lastError.stack } : 'None'
-    });
-});
-
-app.get('/', (req, res) => res.json({ status: 'online', version: '11.0.ULTIMATE' }));
-
-// Routes
-app.use('/api', promptRoutes);
-app.use('/api/history', historyRoutes);
-app.use('/api/templates', templateRoutes);
-
-// Detailed Error Handling
-app.use((err, req, res, next) => {
-    lastError = err;
-    console.error('ENGINE ERROR:', err.message);
-    res.status(500).json({ 
-        error: 'Engine Error', 
-        message: err.message, 
-        version: '11.0.ULTIMATE'
-    });
-});
-
-// DB Connection
+// Database connection (DISABLED for troubleshooting)
+/*
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 })
       .then(() => console.log('✅ DB Connected'))
@@ -61,7 +34,19 @@ if (process.env.MONGO_URI) {
           console.error('❌ DB Error:', err.message);
       });
 }
+*/
+console.log('--- DB CONNECTION SKIPPED FOR STABILITY ---');
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        hasKey: !!process.env.GEMINI_API_KEY, 
+        version: '12.0.SUPREME',
+        dbStatus: 'DISABLED_FOR_DEBUG',
+        lastError: lastError ? { message: lastError.message } : 'None'
+    });
+});
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 ULTIMATE ENGINE LIVE ON ${PORT}`);
+    console.log(`🚀 SUPREME ENGINE LIVE ON ${PORT} (NO-DB MODE)`);
 });

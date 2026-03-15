@@ -16,17 +16,19 @@ const getGenAI = () => {
 export const generateContent = async (prompt, systemInstruction = null) => {
     const ai = getGenAI();
     try {
+        console.log('--- INITIATING GEMINI CALL ---', { model: 'gemini-1.5-flash' });
         const model = ai.getGenerativeModel({ 
             model: 'gemini-1.5-flash',
             systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
         });
 
         const result = await model.generateContent(prompt);
+        console.log('--- GEMINI CALL SUCCESS ---');
         const response = await result.response;
         return response.text();
     } catch (error) {
-        console.error("Gemini API Error:", error);
-        throw error;
+        console.error("--- GEMINI CRITICAL ERROR ---", error.message);
+        throw new Error(`Gemini Failure: ${error.message}`);
     }
 };
 
