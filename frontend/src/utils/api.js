@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || '/api',
-}); // Default to /api for production compatibility via vercel.json
+    timeout: 10000, // 10 seconds timeout
+}); 
 
 export const generatePrompt = async (prompt) => {
     const res = await api.post('/generate', { prompt });

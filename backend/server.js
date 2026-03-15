@@ -54,9 +54,10 @@ app.use(express.json());
 // Routes
 app.get('/', (req, res) => {
     res.json({
-        message: 'PromptCraft AI Lab API',
-        author: 'Tony Francis',
-        contact: 'tony28252@gmail.com'
+        status: 'online',
+        message: 'PromptCraft AI Lab API is operational.',
+        environment: process.env.NODE_ENV || 'production',
+        dbStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected/connecting'
     });
 });
 app.use('/api', promptRoutes);
