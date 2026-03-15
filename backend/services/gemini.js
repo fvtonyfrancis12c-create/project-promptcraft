@@ -1,32 +1,30 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+// Uses @google/genai (v1 API) instead of @google/generative-ai (v1beta API)
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let genAICache = null;
+let aiClient = null;
 
-const getGenAI = () => {
-    if (genAICache) return genAICache;
+const getClient = () => {
+    if (aiClient) return aiClient;
     if (!process.env.GEMINI_API_KEY) {
         throw new Error("GEMINI_API_KEY is missing. Check your environment variables.");
     }
-    genAICache = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    return genAICache;
+    aiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    return aiClient;
 };
 
 export const generateContent = async (prompt, systemInstruction = null) => {
-    const ai = getGenAI();
+    const ai = getClient();
     try {
-        console.log('--- INITIATING GEMINI CALL ---', { model: 'gemini-1.5-flash' });
-        // Use full model path if necessary, but standard SDK uses short name
-        const model = ai.getGenerativeModel({ 
-            model: 'gemini-pro',
-            systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
+        console.log('--- INITIATING GEMINI CALL (v1 API) ---');
+        const response = await ai.models.generateContent({
+            model: 'gemini-1.5-flash',
+            contents: prompt,
+            config: systemInstruction ? { systemInstruction } : undefined,
         });
-
-        const result = await model.generateContent(prompt);
         console.log('--- GEMINI CALL SUCCESS ---');
-        const response = await result.response;
-        return response.text();
+        return response.text;
     } catch (error) {
         console.error("--- GEMINI CRITICAL ERROR ---", error.message);
         throw new Error(`Gemini Failure: ${error.message}`);
@@ -34,20 +32,20 @@ export const generateContent = async (prompt, systemInstruction = null) => {
 };
 
 export const generateJSONContent = async (prompt, systemInstruction = null) => {
-    const ai = getGenAI();
+    const ai = getClient();
     try {
-        const model = ai.getGenerativeModel({ 
-            model: 'gemini-pro',
-            generationConfig: { responseMimeType: "application/json" },
-            systemInstruction: systemInstruction ? { role: 'system', parts: [{ text: systemInstruction }] } : undefined
+        const response = await ai.models.generateContent({
+            model: 'gemini-1.5-flash',
+            contents: prompt,
+            config: {
+                responseMimeType: 'application/json',
+                ...(systemInstruction ? { systemInstruction } : {}),
+            },
         });
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        return JSON.parse(response.text());
+        return JSON.parse(response.text);
     } catch (error) {
-        console.error("Gemini API Error (JSON):", error);
-        throw error;
+        console.error("--- GEMINI JSON ERROR ---", error.message);
+        throw new Error(`Gemini JSON Failure: ${error.message}`);
     }
 };
 
